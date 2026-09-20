@@ -1,0 +1,1 @@
+export default function Login(){return <main className="wrap"><div className="form"><div className="brand">HVAC<span style={{color:"#42d6ff"}}>Flow+</span></div><h1>Customer login</h1><p className="muted">Authentication is being connected to your secure company workspace.</p><a className="btn" href="/">Back to HVACFlow+</a></div></main>}
