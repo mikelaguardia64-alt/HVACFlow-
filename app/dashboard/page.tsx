@@ -2,6 +2,7 @@ import{redirect}from"next/navigation";
 import{createServerClient}from"@supabase/ssr";
 import{cookies}from"next/headers";
 import BillingActions from"./BillingActions";
+import CommunicationsSettings from"./CommunicationsSettings";
 
 export default async function DashboardPage(){
   const c=await cookies();
@@ -10,7 +11,7 @@ export default async function DashboardPage(){
   });
   const{data:{user}}=await s.auth.getUser();
   if(!user)redirect("/login");
-  const{data:m}=await s.from("company_members").select("company_id,companies(name,subscription_status,subscription_current_period_end)").eq("user_id",user.id).maybeSingle();
+  const{data:m}=await s.from("company_members").select("company_id,companies(name,subscription_status,subscription_current_period_end,twilio_phone_number)").eq("user_id",user.id).maybeSingle();
   const id=m?.company_id;
   const{count:leads}=id?await s.from("leads").select("id",{count:"exact",head:true}).eq("company_id",id):{count:0};
   const{count:appointments}=id?await s.from("appointments").select("id",{count:"exact",head:true}).eq("company_id",id):{count:0};
@@ -28,5 +29,6 @@ export default async function DashboardPage(){
       <p>HVACFlow+ subscription</p>
       <BillingActions active={active}/>
     </div>
+    <CommunicationsSettings initialPhone={company?.twilio_phone_number??""}/>
   </div></main>;
 }
